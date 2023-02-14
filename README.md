@@ -1,0 +1,1 @@
+# activity-05-mini-competition

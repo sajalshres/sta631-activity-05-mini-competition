@@ -1595,6 +1595,10 @@ nobs
 </table>
 
 ``` r
+data = data %>%
+  mutate(sqrt_scholarship = sqrt(scholarship))
+
+
 m_mlr_3 <- lm(debt ~ distance * scholarship * parents * major, data = data)
 glance(m_mlr_3) %>% kable()
 ```
@@ -1692,7 +1696,8 @@ norm_data <- data %>%
   mutate(log_scholarship = log(scholarship))
 
 # Remove inf values
-norm_data$log_distance[!is.finite(norm_data$log_distance)] <- 0
+norm_data$log_distance[is.infinite(norm_data$log_distance)] <- 0
+norm_data$log_scholarship[is.infinite(norm_data$log_scholarship)] <- 0
 
 # fit model
 m_mlr_4 <- lm(debt ~ log_distance + scholarship + parents, data = norm_data)
@@ -1791,3 +1796,26 @@ ggplot2::autoplot(m_mlr_3)
 ```
 
 ![](mini-competition_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+## Test for Collinearity
+
+``` r
+car::vif(m_mlr_3)
+```
+
+    ##                                          GVIF Df GVIF^(1/(2*Df))
+    ## distance                            113.11203  1       10.635414
+    ## scholarship                          63.58333  1        7.973915
+    ## parents                              28.65536  1        5.353070
+    ## major                              1268.42470  2        5.967826
+    ## distance:scholarship                118.32967  1       10.877944
+    ## distance:parents                    111.65165  1       10.566535
+    ## scholarship:parents                  56.88293  1        7.542078
+    ## distance:major                     5347.65939  2        8.551473
+    ## scholarship:major                  3212.95258  2        7.528806
+    ## parents:major                      1515.36329  2        6.239204
+    ## distance:scholarship:parents        107.05318  1       10.346651
+    ## distance:scholarship:major         7127.67600  2        9.188339
+    ## distance:parents:major             4777.19820  2        8.313680
+    ## scholarship:parents:major          2049.26537  2        6.728210
+    ## distance:scholarship:parents:major 5242.04749  2        8.508936

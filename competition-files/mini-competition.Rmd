@@ -42,7 +42,6 @@ psych::pairs.panels(
 )
 ```
 
-
 ```{r initial-analysis-pairwse, fig.height=8, fig.width=10, warning=FALSE, message=FALSE}
 allendale_students %>%
   ggpairs()
@@ -85,7 +84,7 @@ tidy(m_parents) %>% kable()
 
 ```{r slr-debt-parents-2}
 glance(m_parents) %>% kable()
-``` 
+```
 
 ### SLR: debt and car
 
@@ -157,10 +156,16 @@ glance(m_mlr_2) %>% kable()
 ```
 
 ```{r}
+
+data = data %>%
+  mutate(sqrt_scholarship = sqrt(scholarship))
+
+
 m_mlr_3 <- lm(debt ~ distance * scholarship * parents * major, data = data)
 glance(m_mlr_3) %>% kable()
 ```
-The model `m_mlr_3` seems to be the best fit. 
+
+The model `m_mlr_3` seems to be the best fit.
 
 Next, let investigate if performing normalization can boost our model:
 
@@ -170,7 +175,8 @@ norm_data <- data %>%
   mutate(log_scholarship = log(scholarship))
 
 # Remove inf values
-norm_data$log_distance[!is.finite(norm_data$log_distance)] <- 0
+norm_data$log_distance[is.infinite(norm_data$log_distance)] <- 0
+norm_data$log_scholarship[is.infinite(norm_data$log_scholarship)] <- 0
 
 # fit model
 m_mlr_4 <- lm(debt ~ log_distance + scholarship + parents, data = norm_data)
@@ -183,4 +189,12 @@ Now lets perform some model diagnostics for model `m_mlr_3`:
 
 ```{r, fig.height=8, fig.width=10, warning=FALSE, message=FALSE}
 ggplot2::autoplot(m_mlr_3)
+```
+
+## Test for Collinearity
+
+```{r test-collieanarity, warning=FALSE, message=FALSE}
+
+car::vif(m_mlr_3)
+
 ```

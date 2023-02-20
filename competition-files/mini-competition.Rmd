@@ -176,4 +176,11 @@ norm_data$log_distance[!is.finite(norm_data$log_distance)] <- 0
 m_mlr_4 <- lm(debt ~ log_distance + scholarship + parents, data = norm_data)
 glance(m_mlr_4) %>% kable()
 ```
+
 No improvements, The model `m_mlr_3` produces better result.
+
+Now lets perform some model diagnostics for model `m_mlr_3`:
+
+```{r, fig.height=8, fig.width=10, warning=FALSE, message=FALSE}
+ggplot2::autoplot(m_mlr_3)
+```

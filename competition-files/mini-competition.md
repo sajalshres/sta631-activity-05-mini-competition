@@ -1783,3 +1783,11 @@ nobs
 </table>
 
 No improvements, The model `m_mlr_3` produces better result.
+
+Now lets perform some model diagnostics for model `m_mlr_3`:
+
+``` r
+ggplot2::autoplot(m_mlr_3)
+```
+
+![](mini-competition_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->

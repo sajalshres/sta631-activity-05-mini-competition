@@ -6,3 +6,174 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+```{r import-library, warning=FALSE, message=FALSE}
+library("knitr")
+library("kableExtra")
+library("tidyverse")
+library("tidymodels")
+library("GGally")
+library("psych")
+library("ggfortify")
+```
+
+## Import Data
+
+```{r import-data, fig.align='center', warning=FALSE, message=FALSE}
+allendale_students <- readr::read_csv("./data/allendale-students.csv")
+
+knitr::kable(head(allendale_students))
+```
+
+## Initial Analysis
+
+```{r initial-analysis}
+
+kable(summary(allendale_students))
+```
+
+```{r initial-analysis-pairs-panel, fig.height=8, fig.width=10, warning=FALSE, message=FALSE}
+psych::pairs.panels(
+  allendale_students,
+  hist.col = "#00AFBB",
+  method= "pearson",
+  density = TRUE,
+  ellipses = TRUE
+)
+```
+
+
+```{r initial-analysis-pairwse, fig.height=8, fig.width=10, warning=FALSE, message=FALSE}
+allendale_students %>%
+  ggpairs()
+```
+
+From the above visualization, we can observe that the observations in distance and scholarship variables are skewed towards right. Also, we can observe that the variable debt has some correlation with distance, scholarship and parents variables.
+
+## Perform Single Linear Regression
+
+Lets use the `lm` function to fit the linear model where `y` is debt and `x` is distance, scholarship, parents, car, and housing
+
+### SLR: debt and distance
+
+```{r slr-debt-distance}
+m_distance <- lm(debt ~ distance, data = allendale_students)
+tidy(m_distance) %>% kable()
+```
+
+```{r slr-debt-distance-2}
+glance(m_distance) %>% kable()
+```
+
+### SLR: debt and scholarship
+
+```{r slr-debt-scholarship}
+m_scholarship <- lm(debt ~ scholarship, data = allendale_students)
+tidy(m_scholarship) %>% kable()
+```
+
+```{r slr-debt-scholarship-2}
+glance(m_scholarship) %>% kable()
+```
+
+### SLR: debt and parents
+
+```{r slr-debt-parents}
+m_parents <- lm(debt ~ parents, data = allendale_students)
+tidy(m_parents) %>% kable()
+```
+
+```{r slr-debt-parents-2}
+glance(m_parents) %>% kable()
+``` 
+
+### SLR: debt and car
+
+```{r slr-debt-car}
+m_car <- lm(debt ~ car, data = allendale_students)
+tidy(m_car) %>% kable()
+```
+
+```{r slr-debt-car-2}
+glance(m_car) %>% kable()
+```
+
+## Multiple Linear Regression
+
+Fit the multiple linear regression with debt as dependent variables and distance, scholarship and parents as independent variables.
+
+```{r mlr}
+m_mlr_dsp <- lm(debt ~ distance + scholarship + parents , data = allendale_students)
+tidy(m_mlr_dsp) %>% kable()
+```
+
+Access model fit using `glance`:
+
+```{r mlr-glance}
+glance(m_mlr_dsp) %>% kable()
+```
+
+Now, lets access the model diagnostics using the `ggplot2::autoplot` function.
+
+```{r, fig.height=8, fig.width=10, warning=FALSE, message=FALSE}
+ggplot2::autoplot(m_mlr_dsp)
+```
+
+In the above diagnostics plot, we can observe that observation 11 is clearly an outlier. Lets use `broom::augment` to further analyze the outlier.
+
+```{r}
+# https://broom.tidymodels.org/reference/augment.lm.html
+augment_allendale_students <- broom::augment(m_mlr_dsp, data=allendale_students)
+```
+
+Looking into `augment_allendale_students` variable, it looks like observation `11` is clearly an outlier. lets remove it from the data:
+
+```{r}
+data <- allendale_students %>%
+  filter(!row_number() %in% c(11))
+```
+
+Now, lets fit the multiple linear regression again:
+
+```{r}
+m_mlr_dsp <- lm(debt ~ distance + scholarship + parents , data = data)
+tidy(m_mlr_dsp) %>% kable()
+```
+
+```{r}
+glance(m_mlr_dsp) %>% kable()
+```
+
+We can observed imporved model after removing the outlier. Now lets try to fit the MLR with different interation:
+
+```{r}
+m_mlr_1 <- lm(debt ~ distance * car + scholarship + parents, data = data)
+glance(m_mlr_1) %>% kable()
+```
+
+```{r}
+m_mlr_2 <- lm(debt ~ distance * scholarship * parents * housing, data = data)
+glance(m_mlr_2) %>% kable()
+```
+
+```{r}
+m_mlr_3 <- lm(debt ~ distance * scholarship * parents * major, data = data)
+glance(m_mlr_3) %>% kable()
+```
+The model `m_mlr_3` seems to be the best fit. 
+
+Next, let investigate if performing normalization can boost our model:
+
+```{r}
+norm_data <- data %>%
+  mutate(log_distance = log(distance)) %>%
+  mutate(log_scholarship = log(scholarship))
+
+# Remove inf values
+norm_data$log_distance[!is.finite(norm_data$log_distance)] <- 0
+
+# fit model
+m_mlr_4 <- lm(debt ~ log_distance + scholarship + parents, data = norm_data)
+glance(m_mlr_4) %>% kable()
+```
+No improvements, The model `m_mlr_3` produces better result.

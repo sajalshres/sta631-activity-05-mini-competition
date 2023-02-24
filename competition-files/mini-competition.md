@@ -404,6 +404,149 @@ scholarship and parents variables.
 Lets use the `lm` function to fit the linear model where `y` is debt and
 `x` is distance, scholarship, parents, car, and housing
 
+``` r
+for (x in c("distance", "scholarship", "parents", "car", "housing")) {
+  m <- lm(paste("debt", "~", x), data = allendale_students)
+  print(tidy(m) %>% kable())
+}
+```
+
+    ## <table>
+    ##  <thead>
+    ##   <tr>
+    ##    <th style="text-align:left;"> term </th>
+    ##    <th style="text-align:right;"> estimate </th>
+    ##    <th style="text-align:right;"> std.error </th>
+    ##    <th style="text-align:right;"> statistic </th>
+    ##    <th style="text-align:right;"> p.value </th>
+    ##   </tr>
+    ##  </thead>
+    ## <tbody>
+    ##   <tr>
+    ##    <td style="text-align:left;"> (Intercept) </td>
+    ##    <td style="text-align:right;"> 24910.73423 </td>
+    ##    <td style="text-align:right;"> 768.492674 </td>
+    ##    <td style="text-align:right;"> 32.415058 </td>
+    ##    <td style="text-align:right;"> 0 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:left;"> distance </td>
+    ##    <td style="text-align:right;"> 47.25003 </td>
+    ##    <td style="text-align:right;"> 5.845699 </td>
+    ##    <td style="text-align:right;"> 8.082871 </td>
+    ##    <td style="text-align:right;"> 0 </td>
+    ##   </tr>
+    ## </tbody>
+    ## </table>
+    ## <table>
+    ##  <thead>
+    ##   <tr>
+    ##    <th style="text-align:left;"> term </th>
+    ##    <th style="text-align:right;"> estimate </th>
+    ##    <th style="text-align:right;"> std.error </th>
+    ##    <th style="text-align:right;"> statistic </th>
+    ##    <th style="text-align:right;"> p.value </th>
+    ##   </tr>
+    ##  </thead>
+    ## <tbody>
+    ##   <tr>
+    ##    <td style="text-align:left;"> (Intercept) </td>
+    ##    <td style="text-align:right;"> 35735.773269 </td>
+    ##    <td style="text-align:right;"> 702.3780382 </td>
+    ##    <td style="text-align:right;"> 50.87826 </td>
+    ##    <td style="text-align:right;"> 0 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:left;"> scholarship </td>
+    ##    <td style="text-align:right;"> -1.606293 </td>
+    ##    <td style="text-align:right;"> 0.1359803 </td>
+    ##    <td style="text-align:right;"> -11.81268 </td>
+    ##    <td style="text-align:right;"> 0 </td>
+    ##   </tr>
+    ## </tbody>
+    ## </table>
+    ## <table>
+    ##  <thead>
+    ##   <tr>
+    ##    <th style="text-align:left;"> term </th>
+    ##    <th style="text-align:right;"> estimate </th>
+    ##    <th style="text-align:right;"> std.error </th>
+    ##    <th style="text-align:right;"> statistic </th>
+    ##    <th style="text-align:right;"> p.value </th>
+    ##   </tr>
+    ##  </thead>
+    ## <tbody>
+    ##   <tr>
+    ##    <td style="text-align:left;"> (Intercept) </td>
+    ##    <td style="text-align:right;"> 35587.43 </td>
+    ##    <td style="text-align:right;"> 1208.988 </td>
+    ##    <td style="text-align:right;"> 29.435710 </td>
+    ##    <td style="text-align:right;"> 0 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:left;"> parents </td>
+    ##    <td style="text-align:right;"> -22931.59 </td>
+    ##    <td style="text-align:right;"> 4023.178 </td>
+    ##    <td style="text-align:right;"> -5.699869 </td>
+    ##    <td style="text-align:right;"> 0 </td>
+    ##   </tr>
+    ## </tbody>
+    ## </table>
+    ## <table>
+    ##  <thead>
+    ##   <tr>
+    ##    <th style="text-align:left;"> term </th>
+    ##    <th style="text-align:right;"> estimate </th>
+    ##    <th style="text-align:right;"> std.error </th>
+    ##    <th style="text-align:right;"> statistic </th>
+    ##    <th style="text-align:right;"> p.value </th>
+    ##   </tr>
+    ##  </thead>
+    ## <tbody>
+    ##   <tr>
+    ##    <td style="text-align:left;"> (Intercept) </td>
+    ##    <td style="text-align:right;"> 29553.70566 </td>
+    ##    <td style="text-align:right;"> 2191.521 </td>
+    ##    <td style="text-align:right;"> 13.4854760 </td>
+    ##    <td style="text-align:right;"> 0.0000000 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:left;"> car </td>
+    ##    <td style="text-align:right;"> -11.43795 </td>
+    ##    <td style="text-align:right;"> 297.650 </td>
+    ##    <td style="text-align:right;"> -0.0384275 </td>
+    ##    <td style="text-align:right;"> 0.9693856 </td>
+    ##   </tr>
+    ## </tbody>
+    ## </table>
+    ## <table>
+    ##  <thead>
+    ##   <tr>
+    ##    <th style="text-align:left;"> term </th>
+    ##    <th style="text-align:right;"> estimate </th>
+    ##    <th style="text-align:right;"> std.error </th>
+    ##    <th style="text-align:right;"> statistic </th>
+    ##    <th style="text-align:right;"> p.value </th>
+    ##   </tr>
+    ##  </thead>
+    ## <tbody>
+    ##   <tr>
+    ##    <td style="text-align:left;"> (Intercept) </td>
+    ##    <td style="text-align:right;"> 28789.608 </td>
+    ##    <td style="text-align:right;"> 772.7184 </td>
+    ##    <td style="text-align:right;"> 37.257566 </td>
+    ##    <td style="text-align:right;"> 0.0000000 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:left;"> housingon campus </td>
+    ##    <td style="text-align:right;"> 1707.792 </td>
+    ##    <td style="text-align:right;"> 1221.7751 </td>
+    ##    <td style="text-align:right;"> 1.397795 </td>
+    ##    <td style="text-align:right;"> 0.1637385 </td>
+    ##   </tr>
+    ## </tbody>
+    ## </table>
+
 ### SLR: debt and distance
 
 ``` r
@@ -1210,7 +1353,7 @@ function.
 ggplot2::autoplot(m_mlr_dsp)
 ```
 
-![](mini-competition_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](mini-competition_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 In the above diagnostics plot, we can observe that observation 11 is
 clearly an outlier. Lets use `broom::augment` to further analyze the
@@ -1600,91 +1743,34 @@ data = data %>%
 
 
 m_mlr_3 <- lm(debt ~ distance * scholarship * parents * major, data = data)
-glance(m_mlr_3) %>% kable()
+tidy(m_mlr_3)
 ```
 
-<table>
-<thead>
-<tr>
-<th style="text-align:right;">
-r.squared
-</th>
-<th style="text-align:right;">
-adj.r.squared
-</th>
-<th style="text-align:right;">
-sigma
-</th>
-<th style="text-align:right;">
-statistic
-</th>
-<th style="text-align:right;">
-p.value
-</th>
-<th style="text-align:right;">
-df
-</th>
-<th style="text-align:right;">
-logLik
-</th>
-<th style="text-align:right;">
-AIC
-</th>
-<th style="text-align:right;">
-BIC
-</th>
-<th style="text-align:right;">
-deviance
-</th>
-<th style="text-align:right;">
-df.residual
-</th>
-<th style="text-align:right;">
-nobs
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:right;">
-0.8351244
-</td>
-<td style="text-align:right;">
-0.8134551
-</td>
-<td style="text-align:right;">
-3642.733
-</td>
-<td style="text-align:right;">
-38.53941
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-23
-</td>
-<td style="text-align:right;">
--1901.479
-</td>
-<td style="text-align:right;">
-3852.957
-</td>
-<td style="text-align:right;">
-3935.29
-</td>
-<td style="text-align:right;">
-2322163528
-</td>
-<td style="text-align:right;">
-175
-</td>
-<td style="text-align:right;">
-199
-</td>
-</tr>
-</tbody>
-</table>
+    ## # A tibble: 24 × 5
+    ##    term                      estimate  std.error statistic  p.value
+    ##    <chr>                        <dbl>      <dbl>     <dbl>    <dbl>
+    ##  1 (Intercept)           41158.       3441.        12.0    1.77e-24
+    ##  2 distance                 12.3        30.7        0.400  6.89e- 1
+    ##  3 scholarship              -1.34        0.689     -1.94   5.37e- 2
+    ##  4 parents              -29299.       9964.        -2.94   3.72e- 3
+    ##  5 majorother             3153.       4380.         0.720  4.72e- 1
+    ##  6 majorSTEM             -6521.       4180.        -1.56   1.21e- 1
+    ##  7 distance:scholarship     -0.000311    0.00615   -0.0505 9.60e- 1
+    ##  8 distance:parents        108.         93.6        1.16   2.49e- 1
+    ##  9 scholarship:parents      -0.978       1.91      -0.512  6.10e- 1
+    ## 10 distance:majorother      -9.08       41.0       -0.222  8.25e- 1
+    ## # … with 14 more rows
+
+``` r
+glance(m_mlr_3)
+```
+
+    ## # A tibble: 1 × 12
+    ##   r.squared adj.r.squa…¹ sigma stati…²  p.value    df logLik   AIC   BIC devia…³
+    ##       <dbl>        <dbl> <dbl>   <dbl>    <dbl> <dbl>  <dbl> <dbl> <dbl>   <dbl>
+    ## 1     0.835        0.813 3643.    38.5 1.96e-56    23 -1901. 3853. 3935.  2.32e9
+    ## # … with 2 more variables: df.residual <int>, nobs <int>, and abbreviated
+    ## #   variable names ¹​adj.r.squared, ²​statistic, ³​deviance
 
 The model `m_mlr_3` seems to be the best fit.
 
@@ -1795,7 +1881,7 @@ Now lets perform some model diagnostics for model `m_mlr_3`:
 ggplot2::autoplot(m_mlr_3)
 ```
 
-![](mini-competition_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](mini-competition_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ## Test for Collinearity
 

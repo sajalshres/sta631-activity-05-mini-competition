@@ -53,6 +53,16 @@ From the above visualization, we can observe that the observations in distance a
 
 Lets use the `lm` function to fit the linear model where `y` is debt and `x` is distance, scholarship, parents, car, and housing
 
+```{r}
+
+for (x in c("distance", "scholarship", "parents", "car", "housing")) {
+  m <- lm(paste("debt", "~", x), data = allendale_students)
+  print(tidy(m) %>% kable())
+}
+
+```
+
+
 ### SLR: debt and distance
 
 ```{r slr-debt-distance}
@@ -162,7 +172,8 @@ data = data %>%
 
 
 m_mlr_3 <- lm(debt ~ distance * scholarship * parents * major, data = data)
-glance(m_mlr_3) %>% kable()
+tidy(m_mlr_3)
+glance(m_mlr_3)
 ```
 
 The model `m_mlr_3` seems to be the best fit.
